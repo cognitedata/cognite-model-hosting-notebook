@@ -102,3 +102,11 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+.idea
+test-report.xml
+
+test.py
+test.ipynb
+
+artifacts/

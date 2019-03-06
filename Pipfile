@@ -1,0 +1,21 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+pytest-cov = "*"
+black = "==18.9b0"
+isort = "*"
+tox = "*"
+tox-pyenv = "*"
+
+[packages]
+jupyter = "*"
+tornado = "<6"
+requests = "*"
+cognite-sdk = "==0.13.0a13"
+
+[requires]
+python_version = "3.7"
