@@ -102,7 +102,9 @@ def test_create_package(example, available_operations):
         os.path.join(example, "notebook.ipynb"), available_operations, "some_name", "some description", "build"
     )
 
-    expected_files = sorted([f for f in glob(os.path.join(example, "build/**"), recursive=True) if os.path.isfile(f)])
+    expected_files = sorted(
+        [f for f in glob(os.path.join(example, "expected_build/**"), recursive=True) if os.path.isfile(f)]
+    )
     generated_files = sorted([f for f in glob("build/**", recursive=True) if os.path.isfile(f)])
     assert len(expected_files) == len(generated_files)
 
