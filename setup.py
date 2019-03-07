@@ -9,7 +9,7 @@ version = re.search('^__version__\s*=\s*"(.*)"', open("cognite/model_hosting/not
 )
 
 setup(
-    name="cognite-nostrobook",
+    name="cognite-model-hosting-notebook",
     version=version,
     description="Deploy notebooks to Cognite's model hosting environment",
     url="",  # TODO
