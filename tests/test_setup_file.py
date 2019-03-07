@@ -1,6 +1,7 @@
 from collections import namedtuple
 
 import pytest
+
 from cognite.model_hosting.notebook._setup_file import (
     InvalidRequirements,
     _sanity_check_requirements,

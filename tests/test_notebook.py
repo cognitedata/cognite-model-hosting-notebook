@@ -7,6 +7,7 @@ from shutil import rmtree
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from cognite.client import CogniteClient
 from cognite.model_hosting.notebook.notebook import (
     AvailableOperations,

@@ -1,4 +1,5 @@
 import pytest
+
 from cognite.model_hosting.notebook._model_file import (
     InvalidCodeFormat,
     _source_code_has_load_and_predict,
