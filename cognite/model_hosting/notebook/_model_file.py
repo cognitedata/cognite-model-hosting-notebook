@@ -38,15 +38,14 @@ def _get_function_signature(source_code, function_name):
     return parameter_signatures[0]
 
 
-def _source_code_has_function(source_code, name, parameter_pattern, parameter_description):
+def _source_code_has_function(source_code, name, parameter_pattern, parameter_error_msg):
     parameters = _get_function_signature(source_code, name)
     if parameters is None:
         return False
 
     if re.fullmatch(parameter_pattern, parameters):
         return True
-    else:
-        raise InvalidCodeFormat("{}() must {}".format(name, parameter_description))
+    raise InvalidCodeFormat(parameter_error_msg)
 
 
 def _source_code_has_train(source_code):
@@ -54,21 +53,21 @@ def _source_code_has_train(source_code):
         source_code,
         name="train_model",
         parameter_pattern=r"open_artifact(,.*)?",
-        parameter_description="have `open_artifact` as first parameter (additional user specified parameters are also allowed)",
+        parameter_error_msg="train_model() must have `open_artifact` as first parameter (additional user specified parameters are also allowed)",
     )
 
 
 def _source_code_has_load_and_predict(source_code):
     has_load = _source_code_has_function(
-        source_code, "load_model", r"open_artifact", "have `open_artifact` as the only parameter"
+        source_code, "load_model", r"open_artifact", "load_model() must have `open_artifact` as the only parameter"
     )
     if has_load:
         has_predict = _source_code_has_function(
             source_code,
             name="predict",
             parameter_pattern=r"model, instance(,.*)?",
-            parameter_description=(
-                "have `model` as first parameter and `instance` as second parameter "
+            parameter_error_msg=(
+                "predict() must have `model` as first parameter and `instance` as second parameter "
                 "(additional user specified parameters are also allowed) when there's a load_model() function"
             ),
         )
@@ -77,8 +76,8 @@ def _source_code_has_load_and_predict(source_code):
             source_code,
             name="predict",
             parameter_pattern=r"instance(,.*)?",
-            parameter_description=(
-                "have `instance` as first parameter"
+            parameter_error_msg=(
+                "predict() must have `instance` as first parameter"
                 "(additional user specified parameters are also allowed) when there's no load_model() function"
             ),
         )
@@ -91,7 +90,7 @@ def _source_code_has_load_and_predict(source_code):
 
 def _get_function_parameters(source_code, function_name):
     parameters = _get_function_signature(source_code, function_name)
-    assert parameters is not None
+    assert parameters is not None, "The function `{}` is not defined".format(function_name)
     parameters = parameters.split(",")
     parameters = [p.strip() for p in parameters]
     if len(parameters) != len(set(parameters)):

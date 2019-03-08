@@ -47,9 +47,9 @@ class TestLocalArtifacts:
 
     def test_env_root_dir(self):
         with tempfile.TemporaryDirectory() as dir:
-            os.environ["NOSTROBOOK_ROOT"] = dir
+            os.environ["MODEL_HOSTING_NOTEBOOK_ROOT"] = dir
             self.run_test(lambda name: local_artifacts(name), dir)
-            del os.environ["NOSTROBOOK_ROOT"]
+            del os.environ["MODEL_HOSTING_NOTEBOOK_ROOT"]
 
     def run_test(self, _local_artifacts, root_dir):
         expected_path = os.path.join(root_dir, "artifacts", "some_model", "model.txt")

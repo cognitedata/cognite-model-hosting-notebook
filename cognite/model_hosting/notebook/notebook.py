@@ -12,7 +12,7 @@ from cognite.model_hosting.notebook._setup_file import extract_requirements, get
 
 
 def local_artifacts(model_version_name, root_dir=None):
-    root_dir = root_dir or os.getenv("NOSTROBOOK_ROOT") or os.getcwd()
+    root_dir = root_dir or os.getenv("MODEL_HOSTING_NOTEBOOK_ROOT") or os.getcwd()
 
     def open_artifact(path, *args, **kwargs):
         path = os.path.join(root_dir, "artifacts", model_version_name, path)
