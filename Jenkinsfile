@@ -40,8 +40,10 @@ podTemplate(
                 gitCommit = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
             }
         }
+        def pipVersion = sh(returnStdout: true, script: 'pipenv run yolk -V cognite-model-hosting | sort -n | tail -1 | cut -d\\  -f 2').trim()
         def currentVersion = sh(returnStdout: true, script: 'sed -n -e "/^__version__/p" cognite/model_hosting/notebook/__init__.py | cut -d\\" -f2').trim()
         println("This version: " + currentVersion)
+        println("Latest pip version: " + pipVersion)
         container('python') {
             stage('Install pipenv') {
                 sh("pip3 install pipenv")
@@ -62,6 +64,14 @@ podTemplate(
             stage('Upload coverage reports') {
                 sh 'bash </codecov-script/upload-report.sh'
                 step([$class: 'CoberturaPublisher', coberturaReportFile: 'coverage.xml'])
+            }
+            stage('Build') {
+                sh("python3 setup.py sdist bdist_wheel")
+            }
+            if (env.BRANCH_NAME == 'master' && currentVersion != pipVersion) {
+                stage('Release') {
+                    sh("pipenv run twine upload --config-file /pypi/.pypirc dist/*")
+                }
             }
         }
     }
