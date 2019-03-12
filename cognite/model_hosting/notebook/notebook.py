@@ -126,7 +126,7 @@ def deploy_model_version(
         artifacts_directory (str, optional): Path of the directory containing any artifacts you want to include
             with your deployment.
         description (str, optional): Description of this model version.
-        metadata (Dict[str,str], optional): Any metadata to incldue about this model verison.
+        metadata (Dict[str,str], optional): Any metadata to include about this model verison.
         notebook_path (str, optional): The path to the notebook. If omitted, it will be searched for.
         cognite_client (CogniteClient, optional): The CogniteClient instance to use for uploading the model.
             If omitted, a new instance will be created using the API key in the COGNITE_API_KEY environment variable.
