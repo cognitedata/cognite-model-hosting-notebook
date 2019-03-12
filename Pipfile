@@ -12,12 +12,14 @@ tox = "*"
 tox-pyenv = "*"
 twine = "*"
 yolk3k = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
 
 [packages]
 jupyter = "*"
 tornado = "<6"
 requests = "*"
-cognite-sdk = "==0.13.0a13"
+cognite-sdk = "==0.13.0a19"
 
 [requires]
 python_version = "3.7"
