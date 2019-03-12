@@ -3,7 +3,7 @@ import os
 import re
 from shutil import rmtree
 from time import sleep
-from typing import Any, Dict
+from typing import Any, Callable, Dict, Optional
 from urllib.parse import urljoin
 
 from cognite.client import CogniteClient
@@ -11,7 +11,20 @@ from cognite.model_hosting.notebook._model_file import AvailableOperations, extr
 from cognite.model_hosting.notebook._setup_file import extract_requirements, get_setup_file_content
 
 
-def local_artifacts(model_version_name, root_dir=None):
+def local_artifacts(model_version_name: str, root_dir: str = None) -> Callable:
+    """Local artifacts storage.
+
+    Returns an function which works like the builtin `open` with its root directory in the current working directory or
+    whichever path specified by root_dir.
+
+    Args:
+         model_version_name (str): The name of the model version which the artifacts belong to.
+         root_dir (str): The root directory to store the artifacts in.
+
+    Returns:
+        Callable: A function/context manager which works like the builtin `open`. Let's your read and write to the
+            local artifacts directory.
+    """
     root_dir = root_dir or os.getenv("MODEL_HOSTING_NOTEBOOK_ROOT") or os.getcwd()
 
     def open_artifact(path, *args, **kwargs):
@@ -23,6 +36,7 @@ def local_artifacts(model_version_name, root_dir=None):
 
 
 class UnsupportedNotebookVersion(Exception):
+    """Raised if the current version of Jupyter Notebook is not supported by this integration."""
     pass
 
 
@@ -96,12 +110,28 @@ def deploy_model_version(
     name: str,
     model_id: int,
     runtime_version: str,
-    artifacts_directory: str = None,
-    description: str = None,
-    metadata: Dict[str, str] = None,
-    notebook_path: str = None,
-    cognite_client: CogniteClient = None,
+    artifacts_directory: Optional[str] = None,
+    description: Optional[str] = None,
+    metadata: Optional[Dict[str, str]] = None,
+    notebook_path: Optional[str] = None,
+    cognite_client: Optional[CogniteClient] = None,
 ) -> int:
+    """Deploy the model version in the current notebook to the model hosting environment.
+
+    Args:
+        name (str): The name of the model version.
+        model_id (str): Id of the model to deploy the version to.
+        runtime_version (str): The model hosting runtime version to deploy the model to.
+        artifacts_directory (str, optional): Path of the directory containing any artifacts you want to include
+            with your deployment.
+        description (str, optional): Description of this model version.
+        metadata (Dict[str,str], optional): Any metadata to incldue about this model verison.
+        notebook_path (str, optional): The path to the notebook. If omitted, it will be searched for.
+        cognite_client (CogniteClient, optional): The CogniteClient instance to use for uploading the model.
+            If omitted, a new instance will be created using the API key in the COGNITE_API_KEY environment variable.
+    Returns:
+        int: The model version id
+    """
     notebook_path = notebook_path or _find_notebook_path()
     cognite_client = cognite_client or CogniteClient()
 
@@ -138,14 +168,31 @@ def train_and_deploy_model_version(
     name: str,
     model_id: int,
     runtime_version: str,
-    description: str = None,
-    metadata: Dict[str, str] = None,
-    args: Dict[str, Any] = None,
-    scale_tier: str = None,
-    machine_type: str = None,
-    notebook_path: str = None,
-    cognite_client: CogniteClient = None,
-):
+    description: Optional[str] = None,
+    metadata: Optional[Dict[str, str]] = None,
+    args: Optional[Dict[str, Any]] = None,
+    scale_tier: Optional[str] = None,
+    machine_type: Optional[str] = None,
+    notebook_path: Optional[str] = None,
+    cognite_client: Optional[CogniteClient] = None,
+) -> int:
+    """Train and deploy the model version in the current notebook in the model hosting environment.
+
+    Args:
+        name (str): The name of the model version.
+        model_id (str): Id of the model to deploy the version to.
+        runtime_version (str): The model hosting runtime version to deploy the model to.
+        description (str, optional): Description of this model version.
+        metadata (Dict[str,str], optional): Any metadata to incldue about this model verison.
+        args (Dict[str, Any], optional): Arguments to pass to the train function defined on your model.
+        scale_tier (str, optional): Scale tier to train on. Must be "CUSTOM" or "BASIC".
+        machine_type (str, optional): Machine type to use. Only applicable if scale_tier is "CUSTOM".
+        notebook_path (str, optional): The path to the notebook. If omitted, it will be searched for.
+        cognite_client (CogniteClient, optional): The CogniteClient instance to use for uploading the model.
+            If omitted, a new instance will be created using the API key in the COGNITE_API_KEY environment variable.
+    Returns:
+        int: The model version id
+    """
     notebook_path = notebook_path or _find_notebook_path()
     cognite_client = cognite_client or CogniteClient()
 

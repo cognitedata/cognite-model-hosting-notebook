@@ -10,6 +10,8 @@ def _should_include_code_cell(cell):
 
 
 class InvalidCodeFormat(Exception):
+    """Raised if there is a mistake in how you have defined your model within the notebook."""
+
     pass
 
 

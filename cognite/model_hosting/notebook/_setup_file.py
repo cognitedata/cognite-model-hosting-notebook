@@ -2,6 +2,8 @@ import re
 
 
 class InvalidRequirements(Exception):
+    """Raised if your cell defining requirements is not correctly formatted."""
+
     pass
 
 
