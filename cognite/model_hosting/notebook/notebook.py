@@ -37,6 +37,7 @@ def local_artifacts(model_version_name: str, root_dir: str = None) -> Callable:
 
 class UnsupportedNotebookVersion(Exception):
     """Raised if the current version of Jupyter Notebook is not supported by this integration."""
+
     pass
 
 

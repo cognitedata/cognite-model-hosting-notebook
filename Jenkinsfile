@@ -1,6 +1,6 @@
 @Library('jenkins-helpers@v0.1.12') _
 
-def label = "cognite-model-hosting-notebook-${UUID.randomUUID().toString()}"
+def label = "cognite-model-hosting-nb-${UUID.randomUUID().toString()}"
 
 podTemplate(
     label: label,
