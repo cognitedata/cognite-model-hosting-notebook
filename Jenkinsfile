@@ -1,6 +1,6 @@
 @Library('jenkins-helpers@v0.1.12') _
 
-def label = "cognite-model-hosting-${UUID.randomUUID().toString()}"
+def label = "cognite-model-hosting-notebook-${UUID.randomUUID().toString()}"
 
 podTemplate(
     label: label,
@@ -40,7 +40,7 @@ podTemplate(
                 gitCommit = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
             }
         }
-        def pipVersion = sh(returnStdout: true, script: 'pipenv run yolk -V cognite-model-hosting | sort -n | tail -1 | cut -d\\  -f 2').trim()
+        def pipVersion = sh(returnStdout: true, script: 'pipenv run yolk -V cognite-model-hosting-notebook | sort -n | tail -1 | cut -d\\  -f 2').trim()
         def currentVersion = sh(returnStdout: true, script: 'sed -n -e "/^__version__/p" cognite/model_hosting/notebook/__init__.py | cut -d\\" -f2').trim()
         println("This version: " + currentVersion)
         println("Latest pip version: " + pipVersion)
