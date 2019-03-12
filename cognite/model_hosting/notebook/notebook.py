@@ -11,7 +11,7 @@ from cognite.model_hosting.notebook._model_file import AvailableOperations, extr
 from cognite.model_hosting.notebook._setup_file import extract_requirements, get_setup_file_content
 
 
-def local_artifacts(model_version_name: str, root_dir: str = None) -> Callable:
+def local_artifacts(model_version_name: str, root_dir: Optional[str] = None) -> Callable:
     """Local artifacts storage.
 
     Returns an function which works like the builtin `open` with its root directory in the current working directory or
