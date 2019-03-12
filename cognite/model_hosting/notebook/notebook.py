@@ -14,16 +14,25 @@ from cognite.model_hosting.notebook._setup_file import extract_requirements, get
 def local_artifacts(model_version_name: str, root_dir: Optional[str] = None) -> Callable:
     """Local artifacts storage.
 
-    Returns an function which works like the builtin `open` with its root directory in the current working directory or
-    whichever path specified by root_dir.
+    Returns a function which works like the builtin open(), but pointing to a directory specific to the provided model
+    version name. The directory will be artifacts/<model_version_name>. By default the artifacts directory will reside
+    in the current working directory.
 
     Args:
          model_version_name (str): The name of the model version which the artifacts belong to.
-         root_dir (str, optional): The root directory where the `artifacts` directory reside. Defaults to the current working directory.
+         root_dir (str, optional): The root directory where the `artifacts` directory reside.
+            Defaults to the current working directory.
 
     Returns:
         Callable: A function/context manager which works like the builtin `open`. Let's your read and write to the
             local artifacts directory.
+
+    Examples:
+        Using local_artifacts()::
+
+            open_artifact = local_artifacts('my-model')
+            with open_artifact('my_file.txt', 'w') as f:
+                f.write('A cool file\\n') # will be stored in artifacts/my-model/my_file.txt
     """
     root_dir = root_dir or os.getenv("MODEL_HOSTING_NOTEBOOK_ROOT") or os.getcwd()
 
