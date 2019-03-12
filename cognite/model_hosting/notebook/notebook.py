@@ -19,7 +19,7 @@ def local_artifacts(model_version_name: str, root_dir: Optional[str] = None) -> 
 
     Args:
          model_version_name (str): The name of the model version which the artifacts belong to.
-         root_dir (str): The root directory to store the artifacts in.
+         root_dir (str, optional): The root directory where the `artifacts` directory reside. Defaults to the current working directory.
 
     Returns:
         Callable: A function/context manager which works like the builtin `open`. Let's your read and write to the
