@@ -188,7 +188,7 @@ def train_and_deploy_model_version(
         args (Dict[str, Any], optional): Arguments to pass to the train function defined on your model.
         scale_tier (str, optional): Scale tier to train on. Must be "CUSTOM" or "BASIC".
         machine_type (str, optional): Machine type to use. Only applicable if scale_tier is "CUSTOM".
-        notebook_path (str, optional): The path to the notebook. If omitted, it will be searched for.
+        notebook_path (str, optional): The path to the notebook. If omitted, the notebook you're in will be used.
         cognite_client (CogniteClient, optional): The CogniteClient instance to use for uploading the model.
             If omitted, a new instance will be created using the API key in the COGNITE_API_KEY environment variable.
     Returns:
