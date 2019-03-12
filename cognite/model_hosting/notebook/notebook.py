@@ -181,7 +181,7 @@ def train_and_deploy_model_version(
 
     Args:
         name (str): The name of the model version.
-        model_id (str): Id of the model to deploy the version to.
+        model_id (int): Id of the model to deploy the version to.
         runtime_version (str): The model hosting runtime version to deploy the model to.
         description (str, optional): Description of this model version.
         metadata (Dict[str,str], optional): Any metadata to incldue about this model verison.
