@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "448f39ace6b8817bd6a7814840f9877c8bd50ed4b0a3517c4a96cc94948fd740"
+            "sha256": "065215d7c76d6686bd28ce14fd8f929b085000e3c49dec3c80853320ca34653d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -67,11 +67,11 @@
         },
         "cognite-sdk": {
             "hashes": [
-                "sha256:10c8491ee87ece4dc32f0d747804eb19d7ebb0a9ce2f8ad3b30f3f95d1c1e866",
-                "sha256:3c139a849fa2b368b4bc3fd141c58032a8ef0338c9fe0302cf3c929c58a008ac"
+                "sha256:02d003075a9eb824421cc1d2d8efad260510bb169fca38d8e388238dee60340e",
+                "sha256:05cb897159760581c6805a74d08f5339c0433315965b1f3d4e3bbf27c27c77fc"
             ],
             "index": "pypi",
-            "version": "==0.13.0a19"
+            "version": "==0.13.0"
         },
         "decorator": {
             "hashes": [
@@ -761,11 +761,11 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:067a1d4bf827ffdd56ad21bd46674703fce77c5957f6c1eef731f6146bfcef1c",
-                "sha256:9687049d53695ad45cf5fdc7bbd51f0c49f1ea3ecfc4b7f3fde7501b541f17f4"
+                "sha256:592eaa2c33fae68c7d75aacf042efc9f77b27c08a6224a4f59beab8d9a420523",
+                "sha256:ad3ad5c450284819ecde191a654c09b0ec72257a2c711b9633d677c71c9850c4"
             ],
             "index": "pypi",
-            "version": "==4.3.0"
+            "version": "==4.3.1"
         },
         "pytest-cov": {
             "hashes": [

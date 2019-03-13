@@ -19,7 +19,7 @@ sphinx-rtd-theme = "*"
 jupyter = "*"
 tornado = "<6"
 requests = "*"
-cognite-sdk = "==0.13.0a19"
+cognite-sdk = "==0.13.*"
 
 [requires]
 python_version = "3.7"
