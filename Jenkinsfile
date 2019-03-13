@@ -56,6 +56,7 @@ podTemplate(
                 sh("pipenv run isort -w 120 -m 3 -tc -rc --check-only .")
             }
             stage('Build Docs') {
+                sh("pipenv run pip install .")
                 dir('./docs'){
                     sh("pipenv run sphinx-build -W -b html ./source ./build")
                 }

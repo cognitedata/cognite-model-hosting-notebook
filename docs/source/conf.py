@@ -17,11 +17,6 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
-import sys
-
-sys.path.insert(0, os.path.abspath("../.."))
-import cognite.model_hosting.notebook  # isort:skip
 
 # -- General configuration ------------------------------------------------
 
@@ -32,6 +27,8 @@ import cognite.model_hosting.notebook  # isort:skip
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+import re
+
 extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon"]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -56,7 +53,9 @@ author = "Cognite"
 # built documents.
 #
 # The short X.Y version.
-version = cognite.model_hosting.notebook.__version__
+version = re.search(
+    '^__version__\s*=\s*"(.*)"', open("../../cognite/model_hosting/notebook/__init__.py").read(), re.M
+).group(1)
 # The full version, including alpha/beta/rc tags.
 release = version
 
