@@ -6,6 +6,7 @@ Cognite Model Hosting Jupyter Integration
 =========================================
 [![build](https://webhooks.dev.cognite.ai/build/buildStatus/icon?job=github-builds/cognite-model-hosting-notebook/master)](https://jenkins.cognite.ai/job/github-builds/job/cognite-model-hosting-notebook/job/master/)
 [![codecov](https://codecov.io/gh/cognitedata/cognite-model-hosting-notebook/branch/master/graph/badge.svg?token=L4mMT0ZvBB)](https://codecov.io/gh/cognitedata/cognite-model-hosting-notebook)
+[![Documentation Status](https://readthedocs.com/projects/cognite-model-hosting-notebook/badge/?version=latest)](https://cognite-docs.readthedocs-hosted.com/en/latest/)
 [![PyPI version](https://badge.fury.io/py/cognite-model-hosting-notebook.svg)](https://pypi.org/project/cognite-model-hosting-notebook/)
 [![tox](https://img.shields.io/badge/tox-3.5%2B-blue.svg)](https://www.python.org/downloads/release/python-350/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
