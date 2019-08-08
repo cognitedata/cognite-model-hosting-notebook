@@ -8,7 +8,6 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from cognite.client import CogniteClient
 from cognite.model_hosting.notebook.notebook import (
     AvailableOperations,
     UnsupportedNotebookVersion,
@@ -17,7 +16,6 @@ from cognite.model_hosting.notebook.notebook import (
     _sanitize_package_name,
     deploy_model_version,
     local_artifacts,
-    train_and_deploy_model_version,
 )
 
 
@@ -135,8 +133,8 @@ def test_sanitize_package_name(name, expected_output):
 class TestDeployModelVersion:
     @patch("cognite.model_hosting.notebook.notebook._create_package")
     def test_check_all_calls(self, create_package):
-        cognite_client = MagicMock(CogniteClient)
-        model_hosting = cognite_client.experimental.model_hosting
+        cognite_client = MagicMock()
+        model_hosting = cognite_client.model_hosting
         source_package = namedtuple("SourcePackage", ["id"])(234)
         model_version = namedtuple("ModelVersion", ["id"])(345)
         model_hosting.source_packages.build_and_upload_source_package.return_value = source_package
@@ -180,7 +178,7 @@ class TestDeployModelVersion:
     @patch("cognite.model_hosting.notebook.notebook._find_notebook_path", return_value="path/notebook.py")
     @patch("cognite.model_hosting.notebook.notebook._create_package")
     def test_find_notebook(self, create_package, find_notebook_path):
-        cognite_client = MagicMock(CogniteClient)
+        cognite_client = MagicMock()
         deploy_model_version(name="123some_name", model_id=123, runtime_version="0.1", cognite_client=cognite_client)
 
         assert "path/notebook.py" == create_package.call_args[1]["notebook_path"]
@@ -189,75 +187,6 @@ class TestDeployModelVersion:
     @patch("cognite.model_hosting.notebook.notebook._create_package")
     def test_default_client(self, create_package, CogniteClient_mock):
         deploy_model_version(
-            name="123some_name", model_id=123, runtime_version="0.1", notebook_path="path/notebook.ipynb"
-        )
-
-        CogniteClient_mock.assert_called_once_with()
-
-
-class TestTrainAndDeployModelVersion:
-    @patch("cognite.model_hosting.notebook.notebook._create_package")
-    def test_check_all_calls(self, create_package):
-        cognite_client = MagicMock(CogniteClient)
-        model_hosting = cognite_client.experimental.model_hosting
-        source_package = namedtuple("SourcePackage", ["id"])(234)
-        model_version = namedtuple("ModelVersion", ["id"])(345)
-        model_hosting.source_packages.build_and_upload_source_package.return_value = source_package
-        model_hosting.models.train_and_deploy_model_version.return_value = model_version
-
-        model_version_id = train_and_deploy_model_version(
-            name="123some_name",
-            model_id=123,
-            runtime_version="0.1",
-            description="some description",
-            metadata={"key": "value"},
-            args={"data_spec": "DATA_SPEC"},
-            scale_tier="SCALE_TIER",
-            machine_type="MACHINE_TYPE",
-            notebook_path="path/notebook.ipynb",
-            cognite_client=cognite_client,
-        )
-        assert 345 == model_version_id
-
-        create_package.assert_called_once_with(
-            notebook_path="path/notebook.ipynb",
-            available_operations=AvailableOperations.PREDICT_TRAIN,
-            name="some-name",
-            description="some description",
-            build_dir="build",
-        )
-        model_hosting.source_packages.build_and_upload_source_package.assert_called_once_with(
-            name="123some_name",
-            runtime_version="0.1",
-            package_directory="build/some_name",
-            description="some description",
-            metadata={"key": "value"},
-        )
-        model_hosting.models.train_and_deploy_model_version.assert_called_once_with(
-            name="123some_name",
-            model_id=123,
-            source_package_id=234,
-            description="some description",
-            metadata={"key": "value"},
-            args={"data_spec": "DATA_SPEC"},
-            scale_tier="SCALE_TIER",
-            machine_type="MACHINE_TYPE",
-        )
-
-    @patch("cognite.model_hosting.notebook.notebook._find_notebook_path", return_value="path/notebook.py")
-    @patch("cognite.model_hosting.notebook.notebook._create_package")
-    def test_find_notebook(self, create_package, find_notebook_path):
-        cognite_client = MagicMock(CogniteClient)
-        train_and_deploy_model_version(
-            name="123some_name", model_id=123, runtime_version="0.1", cognite_client=cognite_client
-        )
-
-        assert "path/notebook.py" == create_package.call_args[1]["notebook_path"]
-
-    @patch("cognite.model_hosting.notebook.notebook.CogniteClient")
-    @patch("cognite.model_hosting.notebook.notebook._create_package")
-    def test_default_client(self, create_package, CogniteClient_mock):
-        train_and_deploy_model_version(
             name="123some_name", model_id=123, runtime_version="0.1", notebook_path="path/notebook.ipynb"
         )
 

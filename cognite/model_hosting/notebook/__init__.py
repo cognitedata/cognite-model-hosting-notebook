@@ -1,3 +1,3 @@
-from .notebook import deploy_model_version, local_artifacts, train_and_deploy_model_version
+from .notebook import deploy_model_version, local_artifacts
 
-__version__ = "0.1.0"
+__version__ = "0.2.0a1"

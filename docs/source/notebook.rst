@@ -4,10 +4,6 @@ Deploy only
 ^^^^^^^^^^^
 .. autofunction:: cognite.model_hosting.notebook.notebook.deploy_model_version
 
-Train and deploy
-^^^^^^^^^^^^^^^^
-.. autofunction:: cognite.model_hosting.notebook.notebook.train_and_deploy_model_version
-
 Local Artifacts
 ^^^^^^^^^^^^^^^
 .. autofunction:: cognite.model_hosting.notebook.notebook.local_artifacts

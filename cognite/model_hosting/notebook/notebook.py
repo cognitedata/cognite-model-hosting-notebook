@@ -6,7 +6,7 @@ from time import sleep
 from typing import Any, Callable, Dict, Optional
 from urllib.parse import urljoin
 
-from cognite.client import CogniteClient
+from cognite.client.experimental import CogniteClient
 from cognite.model_hosting.notebook._model_file import AvailableOperations, extract_source_code, get_model_file_content
 from cognite.model_hosting.notebook._setup_file import extract_requirements, get_setup_file_content
 
@@ -153,7 +153,7 @@ def deploy_model_version(
         description=description,
         build_dir="build",
     )
-    model_hosting = cognite_client.experimental.model_hosting
+    model_hosting = cognite_client.model_hosting
     source_package = model_hosting.source_packages.build_and_upload_source_package(
         name=name,
         runtime_version=runtime_version,
@@ -169,69 +169,6 @@ def deploy_model_version(
         artifacts_directory=artifacts_directory,
         description=description,
         metadata=metadata,
-    )
-
-    return model_version.id
-
-
-def train_and_deploy_model_version(
-    name: str,
-    model_id: int,
-    runtime_version: str,
-    description: Optional[str] = None,
-    metadata: Optional[Dict[str, str]] = None,
-    args: Optional[Dict[str, Any]] = None,
-    scale_tier: Optional[str] = None,
-    machine_type: Optional[str] = None,
-    notebook_path: Optional[str] = None,
-    cognite_client: Optional[CogniteClient] = None,
-) -> int:
-    """Train and deploy the model version in the current notebook in the model hosting environment.
-
-    Args:
-        name (str): The name of the model version.
-        model_id (int): Id of the model to deploy the version to.
-        runtime_version (str): The model hosting runtime version to deploy the model to.
-        description (str, optional): Description of this model version.
-        metadata (Dict[str,str], optional): Any metadata to incldue about this model verison.
-        args (Dict[str, Any], optional): Arguments to pass to the train function defined on your model.
-        scale_tier (str, optional): Scale tier to train on. Must be "CUSTOM" or "BASIC".
-        machine_type (str, optional): Machine type to use. Only applicable if scale_tier is "CUSTOM".
-        notebook_path (str, optional): The path to the notebook. If omitted, the notebook you're in will be used.
-        cognite_client (CogniteClient, optional): The CogniteClient instance to use for uploading the model.
-            If omitted, a new instance will be created using the API key in the COGNITE_API_KEY environment variable.
-    Returns:
-        int: The model version id
-    """
-    notebook_path = notebook_path or _find_notebook_path()
-    cognite_client = cognite_client or CogniteClient()
-
-    package_name = _sanitize_package_name(name)
-    _create_package(
-        notebook_path=notebook_path,
-        available_operations=AvailableOperations.PREDICT_TRAIN,
-        name=package_name,
-        description=description,
-        build_dir="build",
-    )
-    model_hosting = cognite_client.experimental.model_hosting
-    source_package = model_hosting.source_packages.build_and_upload_source_package(
-        name=name,
-        runtime_version=runtime_version,
-        package_directory=os.path.join("build", package_name.replace("-", "_")),
-        description=description,
-        metadata=metadata,
-    )
-    _wait_on_uploaded_source_package(source_package.id, model_hosting)
-    model_version = model_hosting.models.train_and_deploy_model_version(
-        name=name,
-        model_id=model_id,
-        source_package_id=source_package.id,
-        description=description,
-        metadata=metadata,
-        args=args,
-        scale_tier=scale_tier,
-        machine_type=machine_type,
     )
 
     return model_version.id
