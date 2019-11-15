@@ -179,7 +179,9 @@ class TestDeployModelVersion:
     @patch("cognite.model_hosting.notebook.notebook._create_package")
     def test_find_notebook(self, create_package, find_notebook_path):
         cognite_client = MagicMock()
-        deploy_model_version(model_name="my_model", version_name="123some_name", runtime_version="0.1", cognite_client=cognite_client)
+        deploy_model_version(
+            model_name="my_model", version_name="123some_name", runtime_version="0.1", cognite_client=cognite_client
+        )
 
         assert "path/notebook.py" == create_package.call_args[1]["notebook_path"]
 
@@ -187,7 +189,10 @@ class TestDeployModelVersion:
     @patch("cognite.model_hosting.notebook.notebook._create_package")
     def test_default_client(self, create_package, CogniteClient_mock):
         deploy_model_version(
-            model_name="my_model", version_name="123some_name", runtime_version="0.1", notebook_path="path/notebook.ipynb"
+            model_name="my_model",
+            version_name="123some_name",
+            runtime_version="0.1",
+            notebook_path="path/notebook.ipynb",
         )
 
         CogniteClient_mock.assert_called_once_with()
