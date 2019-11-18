@@ -117,8 +117,8 @@ def _wait_on_uploaded_source_package(source_package_id, model_hosting_client):
 
 
 def deploy_model_version(
-    name: str,
-    model_id: int,
+    model_name: str,
+    version_name: str,
     runtime_version: str,
     artifacts_directory: Optional[str] = None,
     description: Optional[str] = None,
@@ -129,8 +129,8 @@ def deploy_model_version(
     """Deploy the model version in the current notebook to the model hosting environment.
 
     Args:
-        name (str): The name of the model version.
-        model_id (int): Id of the model to deploy the version to.
+        model_name (str): Name of the model to deploy the version to.
+        version_name (str): The name of the model version.
         runtime_version (str): The model hosting runtime version to deploy the model to.
         artifacts_directory (str, optional): Path of the directory containing any artifacts you want to include
             with your deployment.
@@ -145,7 +145,7 @@ def deploy_model_version(
     notebook_path = notebook_path or _find_notebook_path()
     cognite_client = cognite_client or CogniteClient()
 
-    package_name = _sanitize_package_name(name)
+    package_name = _sanitize_package_name(version_name)
     _create_package(
         notebook_path=notebook_path,
         available_operations=AvailableOperations.PREDICT,
@@ -155,20 +155,20 @@ def deploy_model_version(
     )
     model_hosting = cognite_client.model_hosting
     source_package = model_hosting.source_packages.build_and_upload_source_package(
-        name=name,
+        name=version_name,
         runtime_version=runtime_version,
         package_directory=os.path.join("build", package_name.replace("-", "_")),
         description=description,
         metadata=metadata,
     )
     _wait_on_uploaded_source_package(source_package.id, model_hosting)
-    model_version = model_hosting.models.deploy_model_version(
-        name=name,
-        model_id=model_id,
+    model_version = model_hosting.versions.deploy_model_version(
+        model_name=model_name,
+        version_name=version_name,
         source_package_id=source_package.id,
         artifacts_directory=artifacts_directory,
         description=description,
         metadata=metadata,
     )
 
-    return model_version.id
+    return model_version.name

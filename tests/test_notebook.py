@@ -101,7 +101,11 @@ def test_create_package(example, available_operations):
     )
 
     expected_files = sorted(
-        [f for f in glob(os.path.join(example, "expected_build/**"), recursive=True) if os.path.isfile(f)]
+        [
+            f
+            for f in glob(os.path.join(example, "expected_build/**"), recursive=True)
+            if os.path.isfile(f) and not "__pycache__" in f
+        ]
     )
     generated_files = sorted([f for f in glob("build/**", recursive=True) if os.path.isfile(f)])
     assert len(expected_files) == len(generated_files)
@@ -136,13 +140,13 @@ class TestDeployModelVersion:
         cognite_client = MagicMock()
         model_hosting = cognite_client.model_hosting
         source_package = namedtuple("SourcePackage", ["id"])(234)
-        model_version = namedtuple("ModelVersion", ["id"])(345)
+        model_version = namedtuple("ModelVersion", ["name"])("123some_name")
         model_hosting.source_packages.build_and_upload_source_package.return_value = source_package
-        model_hosting.models.deploy_model_version.return_value = model_version
+        model_hosting.versions.deploy_model_version.return_value = model_version
 
-        model_version_id = deploy_model_version(
-            name="123some_name",
-            model_id=123,
+        model_version_name = deploy_model_version(
+            model_name="my_model",
+            version_name="123some_name",
             runtime_version="0.1",
             artifacts_directory="artifacts/some_model",
             description="some description",
@@ -150,7 +154,7 @@ class TestDeployModelVersion:
             notebook_path="path/notebook.ipynb",
             cognite_client=cognite_client,
         )
-        assert 345 == model_version_id
+        assert "123some_name" == model_version_name
 
         create_package.assert_called_once_with(
             notebook_path="path/notebook.ipynb",
@@ -162,13 +166,13 @@ class TestDeployModelVersion:
         model_hosting.source_packages.build_and_upload_source_package.assert_called_once_with(
             name="123some_name",
             runtime_version="0.1",
-            package_directory="build/some_name",
+            package_directory=os.path.join("build", "some_name"),
             description="some description",
             metadata={"key": "value"},
         )
-        model_hosting.models.deploy_model_version.assert_called_once_with(
-            name="123some_name",
-            model_id=123,
+        model_hosting.versions.deploy_model_version.assert_called_once_with(
+            model_name="my_model",
+            version_name="123some_name",
             source_package_id=234,
             artifacts_directory="artifacts/some_model",
             description="some description",
@@ -179,7 +183,9 @@ class TestDeployModelVersion:
     @patch("cognite.model_hosting.notebook.notebook._create_package")
     def test_find_notebook(self, create_package, find_notebook_path):
         cognite_client = MagicMock()
-        deploy_model_version(name="123some_name", model_id=123, runtime_version="0.1", cognite_client=cognite_client)
+        deploy_model_version(
+            model_name="my_model", version_name="123some_name", runtime_version="0.1", cognite_client=cognite_client
+        )
 
         assert "path/notebook.py" == create_package.call_args[1]["notebook_path"]
 
@@ -187,7 +193,10 @@ class TestDeployModelVersion:
     @patch("cognite.model_hosting.notebook.notebook._create_package")
     def test_default_client(self, create_package, CogniteClient_mock):
         deploy_model_version(
-            name="123some_name", model_id=123, runtime_version="0.1", notebook_path="path/notebook.ipynb"
+            model_name="my_model",
+            version_name="123some_name",
+            runtime_version="0.1",
+            notebook_path="path/notebook.ipynb",
         )
 
         CogniteClient_mock.assert_called_once_with()

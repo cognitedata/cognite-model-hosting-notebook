@@ -16,6 +16,6 @@ setup(
     author="Nils Barlaug",
     author_email="nils.barlaug@cognite.com",
     packages=["cognite.model_hosting.notebook"],
-    install_requires=["cognite-sdk>=1.0.4,<1.1.0", "requests"],
+    install_requires=["cognite-sdk>=1.4.0,<2.0.0", "requests"],
     python_requires=">=3.5",
 )

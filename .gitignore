@@ -110,3 +110,6 @@ test.py
 test.ipynb
 
 artifacts/
+
+# IDE
+.vscode/
